@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import type { Ref } from 'vue'
 import { useTasks } from '@/composables/useTasks'
 import 'vue3-toastify/dist/index.css'
@@ -45,6 +45,10 @@ const handleStatusChangeAndCloseModal = (taskId: number, newStatus: boolean) => 
   handleTaskStatusChange(taskId, newStatus)
   closeModal()
 }
+
+const selectedTaskCompletedString = computed(() => {
+  return selectedTask.value?.completed ? 'Completato' : 'Non completato'
+})
 </script>
 
 <template>
@@ -81,7 +85,7 @@ const handleStatusChangeAndCloseModal = (taskId: number, newStatus: boolean) => 
         :disabled="isAddingTask"
         class="task-list__input"
       />
-      <button @click="addTask" :disabled="isAddingTask" class="task-list__add-btn">
+      <button @click="addTask" :disabled="isAddingTask" class="btn">
         {{ isAddingTask ? 'Aggiungendo...' : 'Aggiungi' }}
       </button>
     </div>
@@ -92,17 +96,16 @@ const handleStatusChangeAndCloseModal = (taskId: number, newStatus: boolean) => 
       <template #default>
         <p><strong>Titolo:</strong> {{ selectedTask?.title }}</p>
         <p><strong>Descrizione:</strong> {{ selectedTask?.description }}</p>
-        <p>
-          <strong>Stato:</strong> {{ selectedTask?.completed ? 'Completato' : 'Non completato' }}
-        </p>
+        <p><strong>Stato:</strong> {{ selectedTaskCompletedString }}</p>
       </template>
       <template #footer>
-        <button @click="closeModal">Chiudi</button>
+        <button @click="closeModal" class="btn">Chiudi</button>
         <button
           v-if="selectedTask"
           @click="handleStatusChangeAndCloseModal(selectedTask.id!, !selectedTask.completed)"
+          class="btn"
         >
-          {{ selectedTask.completed ? 'Segna come non completato' : 'Segna come completato' }}
+          Segna come {{ selectedTaskCompletedString }}
         </button>
       </template>
     </Modal>
@@ -167,24 +170,5 @@ const handleStatusChangeAndCloseModal = (taskId: number, newStatus: boolean) => 
   padding: 8px;
   border: 1px solid #d9d9d9;
   border-radius: 4px;
-}
-
-.task-list__add-btn {
-  padding: 8px;
-  background-color: #1890ff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.task-list__add-btn:hover {
-  background-color: #40a9ff;
-}
-
-.task-list__add-btn:disabled {
-  background-color: #d9d9d9;
-  cursor: not-allowed;
 }
 </style>

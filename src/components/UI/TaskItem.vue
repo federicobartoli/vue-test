@@ -20,7 +20,7 @@ defineProps<{
         <p class="task-list__description">{{ task.description }}</p>
       </slot>
     </div>
-    <button @click="onDelete(task.id)" class="task-list__delete-btn">Elimina</button>
+    <button @click="onDelete(task.id)" class="btn delete">Elimina</button>
   </li>
 </template>
 <style scoped>
@@ -52,20 +52,6 @@ defineProps<{
   margin: 0;
   font-size: 14px;
   color: #666;
-}
-
-.task-list__delete-btn {
-  padding: 6px 12px;
-  background-color: #ff4d4f;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.task-list__delete-btn:hover {
-  background-color: #ff7875;
 }
 
 :deep(.task-list__content) h3,

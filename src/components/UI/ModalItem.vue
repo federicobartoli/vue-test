@@ -22,7 +22,7 @@ const emit = defineEmits(['close'])
           </div>
           <div class="modal-footer">
             <slot name="footer">
-              <button class="modal-button" @click="emit('close')">Chiudi</button>
+              <button class="btn" @click="emit('close')">Chiudi</button>
             </slot>
           </div>
         </div>
@@ -38,7 +38,7 @@ const emit = defineEmits(['close'])
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--overlay-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,7 +46,7 @@ const emit = defineEmits(['close'])
 }
 
 .modal-content {
-  background-color: #ffffff;
+  background-color: var(--color-background);
   border-radius: 8px;
   box-shadow:
     0 4px 6px rgba(0, 0, 0, 0.1),
@@ -96,6 +96,7 @@ const emit = defineEmits(['close'])
   padding: 1rem 1.5rem;
   border-top: 1px solid #e5e5e5;
   display: flex;
+  gap: 10px;
   justify-content: flex-end;
 }
 
