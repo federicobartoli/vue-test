@@ -65,5 +65,6 @@ defineProps<{
 .task-list__content {
   flex-grow: 1;
   margin-right: 12px;
+  overflow: hidden;
 }
 </style>
