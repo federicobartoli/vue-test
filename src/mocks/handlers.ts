@@ -8,17 +8,17 @@ const initialData: Task[] = [
     id: 1,
     title: 'Completare il progetto Vue',
     description: 'Finire di implementare tutte le funzionalità',
-    completed: true
+    completed: false
   },
   {
     id: 2,
     title: 'Imparare Pinia',
     description: 'Studiare la documentazione e fare esercizi',
-    completed: false
+    completed: true
   },
   {
     id: 3,
-    title: 'Scrivere test unitari',
+    title: 'Aggiungere test unitari',
     description: "Coprire almeno l'80% del codice con test",
     completed: false
   }
