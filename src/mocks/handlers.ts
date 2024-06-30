@@ -26,18 +26,18 @@ const initialData: Task[] = [
 
 const tasks = new LiveStorage('tasks', initialData)
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+// const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export const handlers = [
   http.get('/api/tasks', async () => {
-    await delay(500)
+    // await delay(500)
     return HttpResponse.json(tasks.getValue())
   }),
 
   http.post<never, CreateTaskPayload>('/api/tasks', async ({ request }) => {
     const { title, description } = await request.json()
     const newTask: Task = { id: Date.now(), title, description, completed: false }
-    await delay(500)
+    // await delay(500)
     tasks.update((data) => [newTask, ...data])
     return HttpResponse.json(newTask, { status: 201 })
   }),
@@ -48,7 +48,7 @@ export const handlers = [
       const { id } = params
       const { completed } = await request.json()
       const taskIndex = tasks.getValue().findIndex((task) => task.id === Number(id))
-      await delay(500)
+      // await delay(500)
       if (taskIndex !== -1) {
         tasks.update((data) => {
           data[taskIndex].completed = completed
@@ -64,7 +64,7 @@ export const handlers = [
   http.delete<{ id: string }>('/api/tasks/:id', async ({ params }) => {
     const { id } = params
     const taskIndex = tasks.getValue().findIndex((task) => task.id === Number(id))
-    await delay(500)
+    // await delay(500)
     if (taskIndex !== -1) {
       tasks.update((data) => {
         data.splice(taskIndex, 1)
