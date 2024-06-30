@@ -26,7 +26,6 @@ defineProps<{
 <style scoped>
 .task-list__item {
   display: flex;
-  cursor: pointer;
   align-items: center;
   padding: 12px;
   background-color: #ffffff;

@@ -1,19 +1,16 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
-import type { Ref } from 'vue'
+import { ref, computed, watch } from 'vue'
+
 import { useTasks } from '@/composables/useTasks'
 import 'vue3-toastify/dist/index.css'
 // Components
 import SkeletonList from './UI/SkeletonList.vue'
 import TaskItem from './UI/TaskItem.vue'
 import Modal from './UI/ModalItem.vue'
-
-interface Task {
-  id: number
-  title: string
-  description: string
-  completed: boolean
-}
+import TaskFilter from './TaskFilter.vue'
+// types
+import type { Ref } from 'vue'
+import type { Task } from '@/types/tasks'
 
 const {
   tasks,
@@ -49,23 +46,42 @@ const handleStatusChangeAndCloseModal = (taskId: number, newStatus: boolean) => 
 const selectedTaskCompletedString = computed(() => {
   return selectedTask.value?.completed ? 'Completato' : 'Non completato'
 })
+
+const buttonTextCompleted = computed(() => {
+  return selectedTask.value?.completed ? 'Non completato' : 'Completato'
+})
+
+const filteredTasks: Ref<Task[]> = ref([])
+
+watch(
+  tasks,
+  (newTasks: Task[] | undefined) => {
+    filteredTasks.value = newTasks || []
+  },
+  { immediate: true }
+)
+
+const handleFilterChange = (filtered: Task[]) => {
+  filteredTasks.value = filtered
+}
 </script>
 
 <template>
   <div class="task-list">
+    <TaskFilter :tasks="tasks || []" @filter="handleFilterChange" />
     <SkeletonList v-if="isLoading || isPending" :count="3" />
     <div v-else-if="isError" class="task-list__error">Errore: {{ error?.message }}</div>
     <div v-else-if="tasks?.length === 0" class="task-list__empty">Nessun task presente</div>
     <ul v-else class="task-list__list">
       <TaskItem
-        v-for="task in tasks"
+        v-for="task in filteredTasks"
         :key="task.id"
         :task="task"
         :onStatusChange="handleTaskStatusChange"
         :onDelete="handleDeleteTask"
       >
         <template #default="{ task }">
-          <div @click="openModal(task)">
+          <div @click="openModal(task)" class="task__open-modal">
             <h3 class="task-list__title">{{ task.title }}</h3>
             <p class="task-list__description">{{ task.description }}</p>
           </div>
@@ -105,7 +121,7 @@ const selectedTaskCompletedString = computed(() => {
           @click="handleStatusChangeAndCloseModal(selectedTask.id!, !selectedTask.completed)"
           class="btn"
         >
-          Segna come {{ selectedTaskCompletedString }}
+          Segna come {{ buttonTextCompleted }}
         </button>
       </template>
     </Modal>
@@ -114,45 +130,46 @@ const selectedTaskCompletedString = computed(() => {
 
 <style scoped>
 .task-list {
-  min-height: 450px;
+  background-color: var(--color-background-app);
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
+  min-height: 450px;
   padding: 16px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
 }
 
 .task-list__list {
+  height: 230px;
   list-style-type: none;
-  padding: 0;
   margin: 0;
-  height: 300px;
   overflow: scroll;
-  /* Hide scrollbar for IE, Edge and Firefox */
+  padding: 0;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
 .task-list__list::-webkit-scrollbar {
   display: none;
 }
 
 .completed .task-list__title,
 .completed .task-list__description {
-  text-decoration: line-through;
   color: #888;
+  text-decoration: line-through;
 }
 
 .task-list__error,
 .task-list__empty {
-  padding: 16px;
   background-color: #ffffff;
   border-radius: 4px;
-  margin-bottom: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  color: #ff4d4f;
+  margin-bottom: 8px;
+  padding: 16px;
   text-align: center;
+}
+
+.task-list__error {
+  color: #ff4d4f;
 }
 
 .task-list__empty {
@@ -160,15 +177,28 @@ const selectedTaskCompletedString = computed(() => {
 }
 
 .task-list__add-task {
-  margin-top: auto;
   display: flex;
   flex-direction: column;
+  margin-top: auto;
 }
 
 .task-list__input {
-  margin-bottom: 8px;
-  padding: 8px;
   border: 1px solid #d9d9d9;
   border-radius: 4px;
+  margin-bottom: 8px;
+  padding: 8px;
+}
+
+.task__open-modal {
+  cursor: pointer;
+  border-radius: 4px;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.task__open-modal:hover {
+  background-color: var(--task-hover-bg);
+  box-shadow: var(--task-hover-shadow);
 }
 </style>

@@ -1,18 +1,47 @@
 :root {
   --color-background: #ffffff;
+  --color-background-app: #f0f2f5;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   --color-text: #2c3e50;
   --color-primary: #42b983;
   --overlay-color: rgba(0, 0, 0, 0.5);
+
+  --btn-primary: #1890ff;
+  --btn-primary-hover: #40a9ff;
+  --btn-disabled: #d9d9d9;
+  --btn-delete: #ff4d4f;
+  --btn-delete-hover: #ff7875;
+
+  --task-hover-bg: rgba(0, 0, 0, 0.03);
+  --task-hover-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+html.dark-theme {
+  --color-background: #2c2c2c;
+  --color-background-app: #3a3a3a;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --color-text: #e0e0e0;
+  --color-primary: #5ccfa7;
+  --overlay-color: rgba(255, 255, 255, 0.3);
+
+
+  --btn-primary: #177ddc;
+  --btn-primary-hover: #3c9ae8;
+  --btn-disabled: #6c6c6c;
+  --btn-delete: #a61d24;
+  --btn-delete-hover: #cf1322;
+
+
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
 }
 
 body {
-  min-height: 100vh;
-  color: var(--color-text);
   background: var(--color-background);
-  transition:
-    color 0.5s,
-    background-color 0.5s;
-  line-height: 1.6;
+  color: var(--color-text);
   font-family:
     Inter,
     -apple-system,
@@ -27,60 +56,86 @@ body {
     'Helvetica Neue',
     sans-serif;
   font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
   text-rendering: optimizeLegibility;
+  transition:
+    color 0.5s,
+    background-color 0.5s;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-html.dark-theme {
-  --color-background: #1a1a1a;
-  --color-text: #ffffff;
-  --color-primary: #42b983;
-  --overlay-color: rgba(255, 255, 255, 0.5);
-}
-
-.btn {
-  padding: 8px;
-  background-color: #1890ff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  text-transform: uppercase;
-}
-
-.btn:hover {
-  background-color: #40a9ff;
-}
-
-.btn:disabled {
-  background-color: #d9d9d9;
-  cursor: not-allowed;
-}
-
-.btn.delete {
-  background-color: #ff4d4f;
-}
-
-.btn.delete:hover {
-  background-color: #ff7875;
-}
-
 
 #app {
-  margin: 0 auto;
-  padding: 2rem;
   font-weight: normal;
+  margin: 0 auto;
   width: 100%;
+}
+
+h1 {
+  margin-block: 2rem;
+  text-align: center;
 }
 
 a,
 .green {
-  text-decoration: none;
   color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
   padding: 3px;
+  text-decoration: none;
+  transition: 0.4s;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  width: 100%;
+}
+
+label {
+  margin-bottom: 4px;
+}
+
+input,
+select {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.btn {
+  background-color: var(--btn-primary);
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: var(--btn-primary-hover);
+}
+
+.btn:disabled {
+  background-color: var(--btn-disabled);
+  cursor: not-allowed;
+}
+
+.btn.delete {
+  background-color: var(--btn-delete);
+}
+
+.btn.delete:hover {
+  background-color: var(--btn-delete-hover);
 }
 
 @media (hover: hover) {
@@ -94,4 +149,5 @@ a,
     display: flex;
     place-items: center;
   }
+}
 }

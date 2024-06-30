@@ -14,3 +14,8 @@ export type UpdateTaskStatusPayload = {
   id: number
   completed: boolean
 }
+
+export type NewTask = {
+  title: string
+  description: string
+}
