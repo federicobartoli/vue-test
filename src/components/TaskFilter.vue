@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import Fuse from 'fuse.js'
 // Types
 import type { PropType } from 'vue'
@@ -32,26 +32,38 @@ const fuse = computed(
 const filteredAndSortedTasks = computed(() => {
   let result = [...props.tasks]
 
-  // Filter by status
   if (filterStatus.value !== 'all') {
     result = result.filter((task) =>
       filterStatus.value === 'completed' ? task.completed : !task.completed
     )
   }
 
-  // Filter by search query
   if (searchQuery.value) {
     result = fuse.value.search(searchQuery.value).map((res) => res.item)
   }
 
-  // Sort tasks
-  if (!sortBy.value) {
-    return result
-  } else if (sortBy.value === 'name') {
-    return result.sort((a, b) => a.title.localeCompare(b.title))
-  } else {
-    return result.sort((a, b) => (a.completed === b.completed ? 0 : a.completed ? 1 : -1))
+  if (sortBy.value === 'name') {
+    result.sort((a, b) => a.title.localeCompare(b.title))
+  } else if (sortBy.value === 'status') {
+    result.sort((a, b) => (a.completed === b.completed ? 0 : a.completed ? 1 : -1))
   }
+
+  return result
+})
+
+watch(
+  filteredAndSortedTasks,
+  (newTasks) => {
+    emit('filter', newTasks)
+  },
+  { immediate: true }
+)
+
+watch(props.tasks, () => {
+  // Reset filters when tasks change
+  filterStatus.value = 'all'
+  searchQuery.value = ''
+  sortBy.value = ''
 })
 
 const applyFilter = () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import TaskFilter from '../TaskFilter.vue'
 import type { Task } from '@/types/tasks'
 
@@ -26,8 +26,12 @@ describe('TaskFilter', () => {
     })
     const filterSelect = wrapper.find('#filter-status')
     await filterSelect.setValue('completed')
+    await flushPromises()
+
     expect(wrapper.emitted('filter')).toBeTruthy()
-    const filteredTasks = wrapper.emitted('filter')![0][0] as Task[]
+    const filteredTasks = wrapper.emitted('filter')![
+      wrapper.emitted('filter')!.length - 1
+    ][0] as Task[]
     expect(filteredTasks).toHaveLength(1)
     expect(filteredTasks[0].id).toBe(2)
     expect(filteredTasks[0].completed).toBe(true)
@@ -39,17 +43,15 @@ describe('TaskFilter', () => {
     })
     const searchInput = wrapper.find('#search-query')
     await searchInput.setValue('Task 3')
+    await flushPromises()
+
     expect(wrapper.emitted('filter')).toBeTruthy()
     const filterEvents = wrapper.emitted('filter')
     expect(filterEvents).toBeTruthy()
-    expect(filterEvents!.length).toBeGreaterThan(0)
-    expect(filterEvents![0].length).toBeGreaterThan(0)
-    const filteredTasks = filterEvents![0][0] as Task[]
+    const filteredTasks = filterEvents![filterEvents!.length - 1][0] as Task[]
 
     expect(filteredTasks).toHaveLength(3) // this is correct cause we have .4 threshold
-
     expect(filteredTasks[0].title).toBe('Task 3')
-
     expect(filteredTasks.every((task) => task.title.includes('Task'))).toBe(true)
   })
 
@@ -59,8 +61,12 @@ describe('TaskFilter', () => {
     })
     const sortSelect = wrapper.find('#sort-by')
     await sortSelect.setValue('name')
+    await flushPromises()
+
     expect(wrapper.emitted('filter')).toBeTruthy()
-    const sortedTasks = wrapper.emitted('filter')![0][0] as Task[]
+    const sortedTasks = wrapper.emitted('filter')![
+      wrapper.emitted('filter')!.length - 1
+    ][0] as Task[]
     expect(sortedTasks[0].title).toBe('Task 1')
     expect(sortedTasks[1].title).toBe('Task 2')
     expect(sortedTasks[2].title).toBe('Task 3')
@@ -72,8 +78,12 @@ describe('TaskFilter', () => {
     })
     const sortSelect = wrapper.find('#sort-by')
     await sortSelect.setValue('status')
+    await flushPromises()
+
     expect(wrapper.emitted('filter')).toBeTruthy()
-    const sortedTasks = wrapper.emitted('filter')![0][0] as Task[]
+    const sortedTasks = wrapper.emitted('filter')![
+      wrapper.emitted('filter')!.length - 1
+    ][0] as Task[]
     expect(sortedTasks[0].completed).toBe(false)
     expect(sortedTasks[1].completed).toBe(false)
     expect(sortedTasks[2].completed).toBe(true)
